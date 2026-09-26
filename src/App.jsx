@@ -25,8 +25,10 @@ function App() {
         if (!response.ok) throw new Error('Failed to fetch repository tree')
 
         const data = await response.json()
-        // Filter only JSON files (ignoring folders or READMEs)
-        const jsonFiles = data.tree.filter(item => item.path.endsWith('.json'))
+        // Filter only JSON files (ignoring folders, READMEs, and files starting with _)
+        const jsonFiles = data.tree.filter(
+          item => item.path.endsWith('.json') && !item.path.split('/').pop().startsWith('_')
+        )
         setRecipeList(jsonFiles)
       } catch (err) {
         setError(err.message)
@@ -110,20 +112,34 @@ function App() {
             />
 
             <h2 style={{ marginTop: '30px' }}>Ingredients</h2>
-            <ul style={{ fontSize: '1.1em', lineHeight: '1.6' }}>
-              {selectedRecipe.ingredients.map((ing, index) => (
-                <li key={index}>
-                  <strong>{ing.amount}{ing.unit}</strong> {ing.name}
-                </li>
-              ))}
-            </ul>
+            {selectedRecipe.ingredients.map((section, sIndex) => (
+              <div key={sIndex} style={{ marginBottom: '20px' }}>
+                {section.section && <h3 style={{ marginTop: '10px', fontSize: '1.2em' }}>{section.section}</h3>}
+                <ul style={{ fontSize: '1.1em', lineHeight: '1.6', marginTop: section.section ? '10px' : '0' }}>
+                  {section.items.map((ing, iIndex) => (
+                    <li key={iIndex}>
+                      {ing.amount > 0 && <strong>{ing.amount} {ing.unit} </strong>}
+                      {ing.amount2 > 0 && <strong>({ing.amount2} {ing.unit2}) </strong>}
+                      {ing.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
 
             <h2 style={{ marginTop: '30px' }}>Instructions</h2>
-            <ol style={{ fontSize: '1.1em', lineHeight: '1.6' }}>
-              {selectedRecipe.instructions.map((step, index) => (
-                <li key={index} style={{ marginBottom: '12px' }}>{step}</li>
-              ))}
-            </ol>
+            {selectedRecipe.instructions.map((section, sIndex) => (
+              <div key={sIndex} style={{ marginBottom: '20px' }}>
+                {section.section && <h3 style={{ marginTop: '10px', fontSize: '1.2em' }}>{section.section}</h3>}
+                <ol style={{ fontSize: '1.1em', lineHeight: '1.6', marginTop: section.section ? '10px' : '0' }}>
+                  {section.steps.map((step, iIndex) => (
+                    <li key={iIndex} style={{ marginBottom: '10px' }}>
+                      {step}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ))}
 
             {selectedRecipe.trial_notes && (
               <div style={{ backgroundColor: '#fff3cd', padding: '15px', marginTop: '40px', borderRadius: '8px', borderLeft: '5px solid #ffc107' }}>
