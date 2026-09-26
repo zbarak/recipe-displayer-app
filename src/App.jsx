@@ -67,31 +67,51 @@ function App() {
 
   if (error) return <div style={{ color: 'red', padding: '20px' }}>Error: {error}</div>
 
+  // Group recipes by category (first folder in the path)
+  const groupedRecipes = recipeList.reduce((acc, file) => {
+    const parts = file.path.split('/');
+    const category = parts.length > 1 ? parts[0] : 'Uncategorized';
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(file);
+    return acc;
+  }, {});
+
   return (
     <div style={{ display: 'flex', minHeight: '100vh', fontFamily: 'sans-serif' }}>
 
       {/* Sidebar Menu */}
-      <div style={{ width: '250px', borderRight: '1px solid #ccc', padding: '20px', backgroundColor: '#f9f9f9' }}>
-        <h2>My Recipes</h2>
+      <div style={{ width: '250px', borderLeft: '1px solid #ccc', padding: '20px', backgroundColor: '#f9f9f9', overflowY: 'auto' }}>
+        <h2 style={{ marginBottom: '20px' }}>My Recipes</h2>
         <ul style={{ listStyle: 'none', padding: 0 }}>
-          {recipeList.map((file) => (
-            <li key={file.path} style={{ margin: '10px 0' }}>
-              <button
-                onClick={() => loadRecipe(file.path)}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  cursor: 'pointer',
-                  backgroundColor: activePath === file.path ? '#e0e0e0' : 'white',
-                  border: '1px solid #ccc',
-                  borderRadius: '6px',
-                  textAlign: 'left',
-                  fontWeight: activePath === file.path ? 'bold' : 'normal'
-                }}
-              >
-                {/* Clean up the path to just show the filename in the menu */}
-                {file.path.split('/').pop().replace('.json', '').replace(/-/g, ' ')}
-              </button>
+          {Object.entries(groupedRecipes).map(([category, files]) => (
+            <li key={category} style={{ marginBottom: '25px' }}>
+              <h3 style={{ fontSize: '1.1em', margin: '0 0 10px 0', borderBottom: '2px solid var(--accent)', paddingBottom: '4px', color: 'var(--accent)' }}>
+                {category}
+              </h3>
+              <ul style={{ listStyle: 'none', padding: 0 }}>
+                {files.map((file) => (
+                  <li key={file.path} style={{ margin: '8px 0' }}>
+                    <button
+                      onClick={() => loadRecipe(file.path)}
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        cursor: 'pointer',
+                        backgroundColor: activePath === file.path ? 'var(--accent-bg)' : 'transparent',
+                        border: activePath === file.path ? '1px solid var(--accent-border)' : '1px solid var(--border)',
+                        borderRadius: '6px',
+                        textAlign: 'start',
+                        fontWeight: activePath === file.path ? 'bold' : 'normal',
+                        transition: 'all 0.2s',
+                        color: 'var(--text)'
+                      }}
+                    >
+                      {/* Clean up the path to just show the filename in the menu */}
+                      {file.path.split('/').pop().replace('.json', '').replace(/-/g, ' ')}
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </li>
           ))}
         </ul>
