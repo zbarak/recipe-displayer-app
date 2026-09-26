@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const inputFile = 'C:/projects/Recipe Project/all_recipies.json';
-const outputDir = path.join(__dirname, 'generated_recipes');
+const outputDir = path.join(__dirname, '../my-recipe-data');
 
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
@@ -165,7 +165,7 @@ recipes.forEach((recipe, index) => {
         // Strip leading numbers like "1. ", "2. ", "1) "
         const cleanedStep = stepStr.replace(/^\d+[\.\)]\s*/, '').trim();
         if (cleanedStep) {
-          currentInstSection.steps.push(cleanedStep);
+          currentInstSection.steps.push({ text: cleanedStep, image: "" });
         }
       }
     });

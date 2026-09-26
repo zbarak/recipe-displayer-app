@@ -125,11 +125,13 @@ function App() {
         {selectedRecipe && (
           <div>
             <h1>{selectedRecipe.title}</h1>
-            <img
-              src={selectedRecipe.images[0]}
-              alt={selectedRecipe.title}
-              style={{ width: '100%', maxWidth: '500px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
-            />
+            {selectedRecipe.images && selectedRecipe.images.length > 0 && selectedRecipe.images[0] && (
+              <img
+                src={selectedRecipe.images[0]}
+                alt={selectedRecipe.title}
+                style={{ width: '100%', maxWidth: '500px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
+              />
+            )}
 
             <h2 style={{ marginTop: '30px' }}>Ingredients</h2>
             {selectedRecipe.ingredients.map((section, sIndex) => (
@@ -152,11 +154,22 @@ function App() {
               <div key={sIndex} style={{ marginBottom: '20px' }}>
                 {section.section && <h3 style={{ marginTop: '10px', fontSize: '1.2em' }}>{section.section}</h3>}
                 <ol style={{ fontSize: '1.1em', lineHeight: '1.6', marginTop: section.section ? '10px' : '0' }}>
-                  {section.steps.map((step, iIndex) => (
-                    <li key={iIndex} style={{ marginBottom: '10px' }}>
-                      {step}
-                    </li>
-                  ))}
+                  {section.steps.map((step, iIndex) => {
+                    const text = typeof step === 'string' ? step : step.text;
+                    const image = typeof step === 'object' && step.image ? step.image : null;
+                    return (
+                      <li key={iIndex} style={{ marginBottom: '10px' }}>
+                        <div>{text}</div>
+                        {image && (
+                          <img 
+                            src={image} 
+                            alt={`Step ${iIndex + 1}`} 
+                            style={{ maxWidth: '100%', height: 'auto', marginTop: '10px', borderRadius: '8px' }} 
+                          />
+                        )}
+                      </li>
+                    );
+                  })}
                 </ol>
               </div>
             ))}
