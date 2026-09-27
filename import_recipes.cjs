@@ -272,7 +272,7 @@ recipes.forEach((recipe, index) => {
   let tags = Array.isArray(recipe.recipeCategory) ? recipe.recipeCategory.filter(t => !t.includes('import on')) : [];
   
   const allIngredientsText = ingredients.flatMap(sec => sec.items.map(i => i.name)).join(' ').toLowerCase();
-  const allInstructionsText = instructions.join(' ').toLowerCase();
+  const allInstructionsText = instructions.flatMap(sec => sec.steps.map(s => s.text)).join(' ').toLowerCase();
   
   const containsGluten = /(flour|wheat|bread|pasta|קמח|חיטה|לחם|פסטה|פירורי לחם|בישקוטים)/i.test(allIngredientsText);
   const containsDairy = /(milk|butter|cheese|cream|mascarpone|yogurt|ricotta|parmesan|חלב|חמאה|גבינה|שמנת|מסקרפונה|יוגורט|ריקוטה|פרמזן)/i.test(allIngredientsText);
