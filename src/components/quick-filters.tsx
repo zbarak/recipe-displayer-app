@@ -31,13 +31,13 @@ type QuickFiltersProps = {
 export function QuickFilters({ active, counts, onToggle, onClear }: QuickFiltersProps) {
   return (
     <div role="group" aria-label="Quick filters" className="w-full">
-      <ul className="flex flex-wrap justify-center gap-3 mt-4 w-full">
+      <ul className="flex flex-wrap justify-start gap-3 w-full">
         {active.length > 0 && (
-          <li className="shrink-0 flex items-center mr-2">
+          <li className="shrink-0 flex items-center me-2">
             <button
               type="button"
               onClick={onClear}
-              className="text-xs font-medium text-primary hover:underline"
+              className="text-xs font-medium text-stone-500 hover:text-stone-700 hover:underline"
             >
               Clear filters
             </button>
@@ -54,10 +54,10 @@ export function QuickFilters({ active, counts, onToggle, onClear }: QuickFilters
                 onClick={() => onToggle(tag)}
                 aria-pressed={isActive}
                 className={cn(
-                  'flex h-9 items-center gap-2 rounded-full border px-4 text-sm font-medium whitespace-nowrap transition-all active:scale-95 hover:bg-stone-100 hover:border-stone-300 dark:hover:bg-stone-800',
+                  'flex h-9 items-center gap-2 rounded-full border px-4 text-sm font-medium whitespace-nowrap transition-all active:scale-95',
                   isActive
-                    ? 'border-primary/40 bg-primary/10 text-primary shadow-sm hover:bg-primary/20 hover:border-primary/50'
-                    : 'border-border bg-card text-foreground/80',
+                    ? 'border-orange-700/50 bg-orange-50 text-stone-900 shadow-sm'
+                    : 'border-stone-300 bg-transparent text-stone-600 hover:border-orange-700/50 hover:bg-orange-50',
                 )}
               >
                 <Icon className="size-3.5" aria-hidden="true" />
@@ -65,7 +65,7 @@ export function QuickFilters({ active, counts, onToggle, onClear }: QuickFilters
                 <span
                   className={cn(
                     'text-xs tabular-nums',
-                    isActive ? 'text-primary/70' : 'text-muted-foreground',
+                    isActive ? 'text-orange-700/70' : 'text-stone-400',
                   )}
                 >
                   {count}
