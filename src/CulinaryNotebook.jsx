@@ -13,19 +13,8 @@ export default function CulinaryNotebook({ recipeList, selectedRecipe, activePat
   const [scale, setScale] = useState(1)
   const [cookingMode, setCookingMode] = useState(false)
 
-  // 1. Build pseudo-recipes from GitHub file list
-  const allRecipes = useMemo(() => {
-    return recipeList.map(file => {
-      const parts = file.path.split('/')
-      return {
-        id: file.path,
-        title: parts[parts.length - 1].replace('.json', '').replace(/-/g, ' ').replace(/_/g, ' '),
-        category: parts[0],
-        tags: [], // Pseudo tags since we don't fetch all JSONs
-        images: [],
-      }
-    })
-  }, [recipeList])
+  // 1. We now have complete metadata for all recipes from _index.json
+  const allRecipes = recipeList || []
 
   // 2. Derive unique categories and counts
   const categories = useMemo(() => {
@@ -42,11 +31,31 @@ export default function CulinaryNotebook({ recipeList, selectedRecipe, activePat
     if (category) {
       result = result.filter(r => r.category === category)
     }
+    if (activeTags.length > 0) {
+      result = result.filter(r => activeTags.every(t => (r.tags || []).includes(t)))
+    }
     if (query) {
       const q = query.toLowerCase()
       result = result.filter(r => r.title.toLowerCase().includes(q) || r.category.toLowerCase().includes(q))
     }
     return result
+  }, [allRecipes, category, query, activeTags])
+
+  // 4. Compute tag counts for the QuickFilters (based on the current filtered list, but ignoring the tags themselves so you can see what's available)
+  const tagCounts = useMemo(() => {
+    let baseList = allRecipes
+    if (category) baseList = baseList.filter(r => r.category === category)
+    if (query) {
+      const q = query.toLowerCase()
+      baseList = baseList.filter(r => r.title.toLowerCase().includes(q) || r.category.toLowerCase().includes(q))
+    }
+    const counts = {}
+    for (const r of baseList) {
+      for (const t of (r.tags || [])) {
+        counts[t] = (counts[t] || 0) + 1
+      }
+    }
+    return counts
   }, [allRecipes, category, query])
 
   const heading = query.trim() ? 'Search results' : category ?? 'Discover'
@@ -162,7 +171,7 @@ export default function CulinaryNotebook({ recipeList, selectedRecipe, activePat
                 filters={
                   <QuickFilters 
                     active={activeTags} 
-                    counts={{}} 
+                    counts={tagCounts} 
                     onToggle={(t) => setActiveTags(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])} 
                     onClear={() => setActiveTags([])} 
                   />

@@ -179,6 +179,8 @@ const translationMap = {
   "רוגעלך גלותיים - פיצפוצים": "Diaspora Rugelach"
 };
 
+const indexData = [];
+
 recipes.forEach((recipe, index) => {
   if (!recipe.name) return;
 
@@ -332,6 +334,20 @@ recipes.forEach((recipe, index) => {
 
   const outputPath = path.join(categoryDir, filename);
   fs.writeFileSync(outputPath, JSON.stringify(newRecipe, null, 2));
+
+  // Add to index
+  indexData.push({
+    id: `${finalCategory}/${filename}`,
+    title: newRecipe.title,
+    hebrew_title: newRecipe.hebrew_title,
+    description: newRecipe.description,
+    category: newRecipe.category,
+    tags: newRecipe.tags,
+    images: newRecipe.images,
+  });
 });
 
-console.log(`Successfully generated JSON files in ${outputDir}`);
+const indexOutputPath = path.join(outputDir, "_index.json");
+fs.writeFileSync(indexOutputPath, JSON.stringify(indexData, null, 2));
+
+console.log(`Successfully generated JSON files and _index.json in ${outputDir}`);

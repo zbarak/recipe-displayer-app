@@ -15,22 +15,21 @@ function App() {
         const repo = import.meta.env.VITE_GITHUB_REPO_NAME
         const token = import.meta.env.VITE_GITHUB_TOKEN
 
-        // The ?recursive=1 parameter gets all files inside all folders
+        // Fetch the compiled index of all recipes
         const response = await fetch(
-          `https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1`,
+          `https://api.github.com/repos/${owner}/${repo}/contents/_index.json`,
           {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { 
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/vnd.github.v3.raw'
+            }
           }
         )
 
-        if (!response.ok) throw new Error('Failed to fetch repository tree')
+        if (!response.ok) throw new Error('Failed to fetch recipe index')
 
-        const data = await response.json()
-        // Filter only JSON files (ignoring folders, READMEs, and files starting with _)
-        const jsonFiles = data.tree.filter(
-          item => item.path.endsWith('.json') && !item.path.split('/').pop().startsWith('_')
-        )
-        setRecipeList(jsonFiles)
+        const recipes = await response.json()
+        setRecipeList(recipes)
       } catch (err) {
         setError(err.message)
       }
