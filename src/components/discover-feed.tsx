@@ -36,7 +36,7 @@ export function DiscoverFeed({
           <h1 className="font-serif text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-orange-600 via-amber-600 to-orange-400 drop-shadow-sm pb-1">
             {heading}
           </h1>
-          <p className="text-muted-foreground text-lg max-w-md">{subheading}</p>
+          <p className="text-muted-foreground text-lg max-w-md" dir="ltr">{subheading}</p>
         </div>
         <div className="flex justify-center w-full">
           <div className="w-full max-w-2xl">
@@ -52,14 +52,14 @@ export function DiscoverFeed({
       )}
 
       <section aria-labelledby="feed-heading" className="flex flex-col gap-4 lg:gap-5">
-        <div className="flex items-baseline justify-between gap-4 border-b border-border/70 pb-3">
-          <h2 id="feed-heading" className="font-serif text-xl font-semibold lg:text-2xl">
+        <div className="flex items-center gap-3 border-b border-border/70 pb-3" dir="ltr">
+          <h2 id="feed-heading" className="font-serif text-xl font-semibold lg:text-2xl text-foreground">
             <span className="lg:hidden">{heading}</span>
             <span className="hidden lg:inline">{featured ? 'Recent recipes' : 'Recipes'}</span>
           </h2>
-          <p className="text-sm text-muted-foreground tabular-nums" aria-live="polite">
-            {recipes.length} {recipes.length === 1 ? 'recipe' : 'recipes'}
-          </p>
+          <span className="text-sm font-medium text-muted-foreground tabular-nums bg-muted/60 px-2.5 py-0.5 rounded-full" aria-live="polite">
+            {recipes.length}
+          </span>
         </div>
 
         {recipes.length === 0 ? (

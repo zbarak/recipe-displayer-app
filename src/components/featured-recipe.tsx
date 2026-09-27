@@ -21,7 +21,7 @@ export function FeaturedRecipe({ recipe, onOpen }: { recipe: Recipe; onOpen: (id
         aria-hidden="true"
       />
 
-      <div className="flex max-w-2xl flex-col gap-3 p-8 text-white xl:p-10">
+      <div className="flex max-w-2xl flex-col gap-3 p-8 text-white xl:p-10" dir="ltr">
         <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium tracking-wide backdrop-blur-md">
           <Sparkles className="size-3.5" aria-hidden="true" />
           Featured · {categoryTrail(recipe)}

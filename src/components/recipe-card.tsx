@@ -24,7 +24,7 @@ export function RecipeCard({ recipe, onOpen }: { recipe: Recipe; onOpen: (id: st
         )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-1.5 p-4 sm:p-5">
+      <div className="flex flex-1 flex-col gap-1.5 p-5 sm:p-6" dir="ltr">
         <p className="text-xs font-medium tracking-wider text-primary uppercase">
           {categoryTrail(recipe)}
         </p>

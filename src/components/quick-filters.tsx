@@ -30,21 +30,19 @@ type QuickFiltersProps = {
 
 export function QuickFilters({ active, counts, onToggle, onClear }: QuickFiltersProps) {
   return (
-    <div role="group" aria-label="Quick filters" className="flex flex-col gap-2.5">
-      <div className="flex items-center justify-between">
-        <p className="text-xs font-medium tracking-wider text-muted-foreground uppercase">Quick filters</p>
+    <div role="group" aria-label="Quick filters" className="w-full">
+      <ul className="flex flex-wrap justify-center gap-3 mt-4 w-full">
         {active.length > 0 && (
-          <button
-            type="button"
-            onClick={onClear}
-            className="flex items-center gap-1 rounded-md text-xs font-medium text-primary hover:underline"
-          >
-            Clear
-          </button>
+          <li className="shrink-0 flex items-center mr-2">
+            <button
+              type="button"
+              onClick={onClear}
+              className="text-xs font-medium text-primary hover:underline"
+            >
+              Clear filters
+            </button>
+          </li>
         )}
-      </div>
-
-      <ul className="-mx-4 flex scroll-px-4 gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0 [&::-webkit-scrollbar]:hidden">
         {QUICK_FILTERS.map(({ tag, label }) => {
           const Icon = icons[tag]
           const isActive = active.includes(tag)
@@ -56,10 +54,10 @@ export function QuickFilters({ active, counts, onToggle, onClear }: QuickFilters
                 onClick={() => onToggle(tag)}
                 aria-pressed={isActive}
                 className={cn(
-                  'flex h-9 items-center gap-2 rounded-full border px-3.5 text-sm font-medium whitespace-nowrap transition-all active:scale-95',
+                  'flex h-9 items-center gap-2 rounded-full border px-4 text-sm font-medium whitespace-nowrap transition-all active:scale-95 hover:bg-stone-100 hover:border-stone-300 dark:hover:bg-stone-800',
                   isActive
-                    ? 'border-primary/40 bg-primary/10 text-primary'
-                    : 'border-border bg-card text-foreground/80 hover:border-foreground/20 hover:text-foreground',
+                    ? 'border-primary/40 bg-primary/10 text-primary shadow-sm hover:bg-primary/20 hover:border-primary/50'
+                    : 'border-border bg-card text-foreground/80',
                 )}
               >
                 <Icon className="size-3.5" aria-hidden="true" />
