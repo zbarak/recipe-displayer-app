@@ -40,9 +40,14 @@ function App() {
 
   // 2. Fetch the specific recipe when clicked
   const loadRecipe = async (path) => {
+    setActivePath(path)
+    setSelectedRecipe(null)
+    if (!path) {
+      setError(null)
+      return
+    }
+
     try {
-      setActivePath(path)
-      setSelectedRecipe(null) // Clear current recipe while the new one loads
       const owner = import.meta.env.VITE_GITHUB_REPO_OWNER
       const repo = import.meta.env.VITE_GITHUB_REPO_NAME
       const token = import.meta.env.VITE_GITHUB_TOKEN
