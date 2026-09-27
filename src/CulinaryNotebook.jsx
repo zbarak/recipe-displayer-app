@@ -3,6 +3,7 @@ import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@/components/
 import { RecipeSidebar } from '@/components/recipe-sidebar'
 import { RecipeTopBar } from '@/components/recipe-topbar'
 import { RecipeView } from '@/components/recipe-view'
+import { Menu } from 'lucide-react'
 
 // Helper to build the folder tree UI structure out of flat GitHub paths
 function buildTreeFromPaths(files) {
@@ -135,9 +136,20 @@ export default function CulinaryNotebook({ recipeList, selectedRecipe, activePat
             </main>
           </>
         ) : (
-          <div className="flex h-[50vh] items-center justify-center text-muted-foreground">
-             {activePath ? 'Loading recipe...' : 'Select a recipe from the menu to view it.'}
-          </div>
+          <>
+            <header className="sticky top-0 z-30 flex h-14 items-center px-3 sm:px-6 lg:hidden border-b border-border/70 bg-background/85 backdrop-blur-md">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="flex items-center justify-center w-10 h-10 rounded-md hover:bg-muted text-foreground"
+                aria-label="Open recipe list"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+            </header>
+            <div className="flex h-[50vh] items-center justify-center text-muted-foreground">
+               {activePath ? 'Loading recipe...' : 'Select a recipe from the menu to view it.'}
+            </div>
+          </>
         )}
       </div>
     </div>
