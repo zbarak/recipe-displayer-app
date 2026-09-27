@@ -32,16 +32,15 @@ export function DiscoverFeed({
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-7 px-4 py-6 animate-in fade-in duration-300 sm:px-6 lg:gap-10 lg:px-10 lg:py-10">
       <div className="flex flex-col mb-10">
-        <div className="hidden flex-col items-start gap-2 text-start lg:flex mt-4 mb-6">
-          <h1 className="font-serif text-4xl font-extrabold tracking-tight text-stone-900 pb-1">
+        <div className="hidden flex-col items-start gap-2 text-start lg:flex mt-4 mb-8">
+          <h1 className="font-serif text-4xl font-bold tracking-tight text-stone-900 pb-1" dir="auto">
             {heading}
           </h1>
-          <p className="text-stone-600 text-lg max-w-md">{subheading}</p>
+          <p className="text-stone-500 text-lg max-w-xl" dir="auto">{subheading}</p>
         </div>
         
-        <div className="hidden lg:block relative w-full mb-6">
-          <div className="w-full border-b border-stone-200" />
-          <div className="absolute top-0 start-0 border-b-[3px] border-orange-700/80 w-[15%]" />
+        <div className="hidden lg:block relative w-full mb-8 h-px bg-stone-200">
+          <div className="absolute top-0 start-0 h-[3px] -mt-[1px] bg-orange-500 w-24 rounded-full" />
         </div>
 
         <div className="flex justify-start w-full">
