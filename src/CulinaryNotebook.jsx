@@ -69,6 +69,8 @@ export default function CulinaryNotebook({ recipeList, selectedRecipe, activePat
     setQuery('')
     setCategory(null)
     setActiveTags([])
+    onSelectRecipe(null)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
   
   const searchTag = (tag) => {
