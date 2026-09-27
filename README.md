@@ -1,7 +1,7 @@
 # Serverless React Recipe Displayer
 
 ## 1. Project Overview
-This project is a highly customized, future-proof recipe display web application. It utilizes a serverless architecture where a static React frontend dynamically fetches data from a private GitHub repository acting as a headless JSON Content Management System (CMS). The UI is configured for Right-to-Left (RTL) rendering to natively support Hebrew text alongside English.
+This project is a highly customized, future-proof recipe display web application. It utilizes a serverless architecture where a static React frontend dynamically fetches data from a private GitHub repository acting as a headless JSON Content Management System (CMS). The beautiful, modern UI components were initially generated and scaffolded using Vercel's **v0** generative UI tool, and then heavily customized for Right-to-Left (RTL) rendering to natively support Hebrew text alongside English.
 
 ## 2. System Architecture & Tech Stack
 * **Frontend Framework:** React 18+ (scaffolded and bundled via Vite).
@@ -39,12 +39,18 @@ Every recipe in the database strictly follows this standard schema:
   "tags": ["Array", "of", "Strings"],
   "images": ["Array of Cloudinary URL Strings"],
   "original_url": "String (Optional URL to original source)",
+  "youtube_url": "String (Optional YouTube video URL)",
+  "before_starting": ["Array of prep notes and warnings"],
   "ingredients": [
     {
       "section": "String (optional)",
       "items": [
         {
           "name": "String",
+          "metric_amount": Number,
+          "metric_unit": "String",
+          "imperial_amount": Number,
+          "imperial_unit": "String",
           "amount": Number,
           "unit": "String"
         }
@@ -56,7 +62,9 @@ Every recipe in the database strictly follows this standard schema:
       "section": "String (optional)",
       "steps": [
         {
+          "title": "String (optional bold step title)",
           "text": "String representing the step",
+          "wait_time_minutes": Number,
           "image": "String (optional Cloudinary URL)"
         }
       ]
@@ -70,3 +78,20 @@ Every recipe in the database strictly follows this standard schema:
   ]
 }
 ```
+
+## 7. Upcoming Feature Roadmap (Pending Tasks)
+Future development will focus on the following phases. AI assistants reading this document should provide code to help implement these specific features:
+
+### Phase 1: The Kitchen Experience (Interactive State)
+
+*   **Dynamic Batch Scaler:** Add a state variable for a multiplier (default 1). Create buttons for "0.5x", "1x", and "2x". Dynamically multiply the numeric `{ing.amount}` in the rendering map based on this state.
+*   **Cooking Mode:** Add local state (like a Set) to track clicked instruction steps. When an instruction string is clicked, apply a CSS strikethrough and visual checkmark to track progress.
+
+### Phase 2: Navigation & Organization
+
+*   **Folder Tree UI:** Refactor the flat sidebar menu into a recursive component that parses the `folder_path` array from the GitHub Tree API data to build a collapsible, nested file-explorer UI.
+*   **Deep Search & Tag Filters:** Add a search bar above the sidebar that actively filters the displayed recipes by checking for substring matches in the title, tags array, and ingredients array.
+
+### Phase 3: The Exporter
+
+*   **HTML Blob Exporter:** Build a "Share" function that takes the currently active JSON object, injects it into a lightweight standalone HTML template string, converts it to a Blob, and triggers a local browser download for offline sharing via mobile.

@@ -16,7 +16,12 @@ console.log(`Found ${recipes.length} recipes. Generating files...`);
 // Helper to parse ingredients roughly
 function parseIngredient(str) {
   if (str.startsWith('[')) {
-    return { name: str, amount: 0, unit: "" }; 
+    return { 
+      name: str, 
+      metric_amount: 0, metric_unit: "", 
+      imperial_amount: 0, imperial_unit: "", 
+      amount: 0, unit: "" 
+    }; 
   }
 
   const unitMap = {
@@ -50,8 +55,29 @@ function parseIngredient(str) {
     return isNaN(floatVal) ? 0 : floatVal;
   };
 
-  let result = { name: str.trim(), amount: 0, unit: "" };
+  let result = { 
+    name: str.trim(), 
+    metric_amount: 0, metric_unit: "", 
+    imperial_amount: 0, imperial_unit: "", 
+    amount: 0, unit: "" 
+  };
   let currentName = result.name.replace(/^[\s,\+\-]+/, '').trim();
+
+  const metricRegex = /^(g|gr|grams|kg|mg|ml|l|cl|dl|גרם|גר'?|ק"ג|מ"ג|מ"ל|ליטר|ל')$/i;
+  const imperialRegex = /^(cup|cups|c|teaspoon|teaspoons|tsp|tablespoon|tablespoons|tbsp|ounce|ounces|oz|pound|pounds|lb|lbs|כוס|כוסות|כפית|כפיות|כף|כפות)$/i;
+
+  function addMeasurement(amt, unt) {
+    if (metricRegex.test(unt) && !result.metric_amount) {
+      result.metric_amount = amt;
+      result.metric_unit = unt;
+    } else if (imperialRegex.test(unt) && !result.imperial_amount) {
+      result.imperial_amount = amt;
+      result.imperial_unit = unt;
+    } else if (!result.amount) {
+      result.amount = amt;
+      result.unit = unt;
+    }
+  }
 
   // Strip stick measurements (e.g. "/ 1 stick" or "or 1/2 stick") before processing parens
   currentName = currentName.replace(/(?:\/\s*|\b(?:or|and)\s+)?\b\d+(?:[\/\.]\d+|[½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞])?\s+stick(?:s)?\b/gi, '')
@@ -66,8 +92,8 @@ function parseIngredient(str) {
   if (parensMatch && (parensMatch[1] || parensMatch[2])) {
      let amt = parseAmount(parensMatch[1]);
      if (amt === 0 && !parensMatch[1] && parensMatch[2]) amt = 1;
-     result.amount2 = amt;
-     result.unit2 = unitMap[parensMatch[2] ? parensMatch[2].toLowerCase() : ''] || parensMatch[2] || '';
+     const unt = unitMap[parensMatch[2] ? parensMatch[2].toLowerCase() : ''] || parensMatch[2] || '';
+     addMeasurement(amt, unt);
      currentName = currentName.replace(parensMatch[0], ' ');
   }
 
@@ -82,13 +108,14 @@ function parseIngredient(str) {
   const startMatch = currentName.trim().match(startRegex);
 
   if (startMatch) {
-     result.amount = parseAmount(startMatch[1]);
-     result.unit = unitMap[startMatch[2] ? startMatch[2].toLowerCase() : ''] || startMatch[2] || '';
+     const amt1 = parseAmount(startMatch[1]);
+     const unt1 = unitMap[startMatch[2] ? startMatch[2].toLowerCase() : ''] || startMatch[2] || '';
+     addMeasurement(amt1, unt1);
      
-     // If parens weren't used, but we had a + unit, assign to amount2 if empty
-     if (startMatch[3] && !result.amount2) {
-       result.amount2 = parseAmount(startMatch[3]);
-       result.unit2 = unitMap[startMatch[4] ? startMatch[4].toLowerCase() : ''] || startMatch[4] || '';
+     if (startMatch[3]) {
+       const amt2 = parseAmount(startMatch[3]);
+       const unt2 = unitMap[startMatch[4] ? startMatch[4].toLowerCase() : ''] || startMatch[4] || '';
+       addMeasurement(amt2, unt2);
      }
 
      currentName = currentName.trim().replace(startMatch[0], ' ');
@@ -97,6 +124,27 @@ function parseIngredient(str) {
   // Clean up
   result.name = currentName.replace(/^[\s,\+\-]+|[\s,\+\-]+$/g, '').replace(/\s{2,}/g, ' ').trim();
   return result;
+}
+
+function normalizeTemperatures(text) {
+  // 1. Remove Fahrenheit in parens, e.g. " (350 F)"
+  let result = text.replace(/\s*\(\s*\d{3}\s*(?:°|deg|degrees)?\s*F(?:ahrenheit)?\s*\)/gi, '');
+  
+  // 2. Remove Fahrenheit separated by a slash, e.g. " / 350 F"
+  result = result.replace(/\s*\/\s*\d{3}\s*(?:°|deg|degrees)?\s*F(?:ahrenheit)?\b/gi, '');
+  
+  // 3. Handle Fahrenheit followed by Celsius in parens: "350 F (180 C)" -> "180 C"
+  result = result.replace(/\b\d{3}\s*(?:°|deg|degrees)?\s*F(?:ahrenheit)?\s*\(\s*(\d{2,3}\s*(?:°|deg|degrees)?\s*C(?:elsius)?)\s*\)/gi, '$1');
+
+  // 4. Convert standalone Fahrenheit: "350 F" -> "180 C"
+  result = result.replace(/\b(\d{3})\s*(?:°|deg|degrees)?\s*F(?:ahrenheit)?\b/gi, (match, fStr) => {
+    let f = parseInt(fStr, 10);
+    // Bake temperatures are best rounded to the nearest 10 in Celsius
+    let c = Math.round((f - 32) * 5 / 9 / 10) * 10;
+    return match.includes('°') ? c + "°C" : c + " C";
+  });
+
+  return result.replace(/\s{2,}/g, ' ').trim();
 }
 
 const translationMap = {
@@ -163,9 +211,15 @@ recipes.forEach((recipe, index) => {
         currentInstSection = { section: stepStr.replace(/[\[\]]/g, '').trim(), steps: [] };
       } else {
         // Strip leading numbers like "1. ", "2. ", "1) "
-        const cleanedStep = stepStr.replace(/^\d+[\.\)]\s*/, '').trim();
+        let cleanedStep = stepStr.replace(/^\d+[\.\)]\s*/, '').trim();
+        cleanedStep = normalizeTemperatures(cleanedStep);
         if (cleanedStep) {
-          currentInstSection.steps.push({ text: cleanedStep, image: "" });
+          currentInstSection.steps.push({ 
+            title: "",
+            text: cleanedStep, 
+            wait_time_minutes: 0,
+            image: "" 
+          });
         }
       }
     });
@@ -260,6 +314,8 @@ recipes.forEach((recipe, index) => {
     tags: tags,
     images: Array.isArray(recipe.image) ? recipe.image : (recipe.image ? [recipe.image] : []),
     original_url: recipe.isBasedOn || "",
+    youtube_url: recipe.video || "",
+    before_starting: [],
     ingredients: ingredients,
     instructions: instructions,
     trial_notes: trial_notes
