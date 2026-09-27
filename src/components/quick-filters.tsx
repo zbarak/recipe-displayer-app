@@ -56,8 +56,8 @@ export function QuickFilters({ active, counts, onToggle, onClear }: QuickFilters
                 className={cn(
                   'flex h-9 items-center gap-2 rounded-full border px-4 text-sm font-medium whitespace-nowrap transition-all active:scale-95',
                   isActive
-                    ? 'border-orange-700/50 bg-orange-50 text-stone-900 shadow-sm'
-                    : 'border-stone-300 bg-transparent text-stone-600 hover:border-orange-700/50 hover:bg-orange-50',
+                    ? 'border-primary/50 bg-primary/10 text-primary shadow-sm'
+                    : 'border-stone-300 bg-transparent text-stone-600 hover:border-primary/50 hover:bg-primary/5',
                 )}
               >
                 <Icon className="size-3.5" aria-hidden="true" />
@@ -65,7 +65,7 @@ export function QuickFilters({ active, counts, onToggle, onClear }: QuickFilters
                 <span
                   className={cn(
                     'text-xs tabular-nums',
-                    isActive ? 'text-orange-700/70' : 'text-stone-400',
+                    isActive ? 'text-primary/70' : 'text-stone-400',
                   )}
                 >
                   {count}

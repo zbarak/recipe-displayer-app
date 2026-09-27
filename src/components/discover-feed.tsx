@@ -31,8 +31,8 @@ export function DiscoverFeed({
 }: DiscoverFeedProps) {
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-7 px-4 py-6 animate-in fade-in duration-300 sm:px-6 lg:gap-10 lg:px-10 lg:py-10">
-      <div className="flex flex-col mb-10">
-        <div className="hidden flex-col items-start gap-2 text-start lg:flex mt-4 mb-8">
+      <div className="flex flex-col mb-10" dir="ltr">
+        <div className="hidden flex-col items-start gap-2 text-left lg:flex mt-4 mb-8">
           <h1 className="font-serif text-4xl font-bold tracking-tight text-stone-900 pb-1" dir="auto">
             {heading}
           </h1>
@@ -40,11 +40,11 @@ export function DiscoverFeed({
         </div>
         
         <div className="hidden lg:block relative w-full mb-8 h-px bg-stone-200">
-          <div className="absolute top-0 start-0 h-[3px] -mt-[1px] bg-orange-500 w-24 rounded-full" />
+          <div className="absolute top-0 left-0 h-[3px] -mt-[1px] bg-primary w-24 rounded-full" />
         </div>
 
         <div className="flex justify-start w-full">
-          <div className="w-full">
+          <div className="w-full text-left">
             {filters}
           </div>
         </div>
