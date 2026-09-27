@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, ChefHat, CirclePlay, Download, ExternalLink, Menu, Share2 } from 'lucide-react'
+import { ArrowLeft, Check, ChefHat, CirclePlay, Download, ExternalLink, Share2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { Recipe } from '@/lib/recipes'
@@ -10,7 +10,7 @@ type TopBarProps = {
   recipe: Recipe
   cookingMode: boolean
   onToggleCookingMode: () => void
-  onOpenSidebar: () => void
+  onBack: () => void
   onExport: () => void
 }
 
@@ -18,7 +18,7 @@ export function RecipeTopBar({
   recipe,
   cookingMode,
   onToggleCookingMode,
-  onOpenSidebar,
+  onBack,
   onExport,
 }: TopBarProps) {
   const [copied, setCopied] = useState(false)
@@ -51,10 +51,10 @@ export function RecipeTopBar({
           variant="ghost"
           size="icon-lg"
           className="lg:hidden"
-          onClick={onOpenSidebar}
-          aria-label="Open recipe list"
+          onClick={onBack}
+          aria-label="Back to recipes"
         >
-          <Menu className="size-5" />
+          <ArrowLeft className="size-5" />
         </Button>
 
         <nav aria-label="Breadcrumb" className="hidden min-w-0 flex-1 sm:block">

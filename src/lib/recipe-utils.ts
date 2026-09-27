@@ -243,3 +243,13 @@ export function getLabels(rtl: boolean) {
 }
 
 export type Labels = ReturnType<typeof getLabels>
+
+export function categoryTrail(recipe: Recipe): string[] {
+  return recipe.category ? recipe.category.split('>').map((p) => p.trim()).filter(Boolean) : []
+}
+
+export function formatTag(tag: string): string {
+  return tag
+    .replace(/-/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+}
