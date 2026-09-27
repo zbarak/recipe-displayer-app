@@ -5,7 +5,7 @@ export function AppLogo({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center gap-2.5 rounded-xl text-start focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+      className="flex items-center gap-2.5 rounded-xl text-start transition-transform active:scale-95 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
       aria-label="Culinary Notebook, go to Discover"
     >
       <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
