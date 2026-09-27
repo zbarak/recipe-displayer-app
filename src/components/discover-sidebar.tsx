@@ -109,7 +109,7 @@ export function DiscoverSidebar({
         </ul>
       </nav>
 
-      <p className="border-t border-sidebar-border px-5 py-4 text-xs text-muted-foreground">
+      <p className="border-t border-sidebar-border px-5 py-4 text-xs text-muted-foreground text-left" dir="ltr">
         {totalCount} recipes in your notebook
       </p>
     </div>
