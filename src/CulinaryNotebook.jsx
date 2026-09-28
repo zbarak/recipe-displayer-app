@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { DiscoverSidebar } from '@/components/discover-sidebar'
 import { MobileFeedHeader } from '@/components/mobile-feed-header'
 import { DiscoverFeed } from '@/components/discover-feed'
@@ -6,10 +7,45 @@ import { RecipeTopBar } from '@/components/recipe-topbar'
 import { RecipeView } from '@/components/recipe-view'
 import { QuickFilters } from '@/components/quick-filters'
 
-export default function CulinaryNotebook({ recipeList, selectedRecipe, activePath, onSelectRecipe }) {
-  const [query, setQuery] = useState('')
-  const [category, setCategory] = useState(null)
-  const [activeTags, setActiveTags] = useState([])
+export default function CulinaryNotebook({ recipeList, selectedRecipe, activePath }) {
+  const [searchParams, setSearchParams] = useSearchParams()
+  
+  const query = searchParams.get('q') || ''
+  const category = searchParams.get('category') || null
+  const activeTags = searchParams.getAll('tag') || []
+
+  const setQuery = (q) => {
+    setSearchParams(prev => {
+      if (q) prev.set('q', q); else prev.delete('q');
+      return prev;
+    })
+  }
+
+  const setCategory = (c) => {
+    setSearchParams(prev => {
+      if (c) prev.set('category', c); else prev.delete('category');
+      prev.delete('recipe');
+      return prev;
+    })
+  }
+
+  const setActiveTags = (updater) => {
+    setSearchParams(prev => {
+      const currentTags = prev.getAll('tag');
+      const newTags = typeof updater === 'function' ? updater(currentTags) : updater;
+      prev.delete('tag');
+      newTags.forEach(t => prev.append('tag', t));
+      return prev;
+    })
+  }
+
+  const onSelectRecipe = (id) => {
+    setSearchParams(prev => {
+      if (id) prev.set('recipe', id); else prev.delete('recipe');
+      return prev;
+    })
+  }
+
   const [scale, setScale] = useState(1)
   const [cookingMode, setCookingMode] = useState(false)
 
@@ -66,17 +102,12 @@ export default function CulinaryNotebook({ recipeList, selectedRecipe, activePat
       : 'Your tested recipes and works in progress.'
 
   const resetFeed = () => {
-    setQuery('')
-    setCategory(null)
-    setActiveTags([])
-    onSelectRecipe(null)
+    setSearchParams({})
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
   
   const searchTag = (tag) => {
-    setCategory(null)
-    setQuery(tag)
-    onSelectRecipe(null)
+    setSearchParams({ q: tag })
   }
 
   function goHome() {
@@ -126,8 +157,8 @@ export default function CulinaryNotebook({ recipeList, selectedRecipe, activePat
           onQueryChange={setQuery}
           categories={categories}
           totalCount={recipeList.length}
-          activeCategory={recipe ? null : category}
-          onSelectCategory={(c) => { setCategory(c); onSelectRecipe(null); }}
+          activeCategory={category}
+          onSelectCategory={setCategory}
           onHome={resetFeed}
         />
       </aside>
