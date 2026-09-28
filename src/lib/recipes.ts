@@ -41,6 +41,7 @@ export interface Recipe {
   original_url?: string
   youtube_url?: string
   before_starting?: string[]
+  tips?: string[]
   ingredients: IngredientGroup[]
   instructions: InstructionGroup[]
   trial_notes: TrialNote[]

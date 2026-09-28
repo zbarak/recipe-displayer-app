@@ -130,8 +130,23 @@ export function RecipeHero({
             </ul>
           </div>
         )}
-      </div>
 
+        {recipe.tips && recipe.tips.length > 0 && (
+          <div className="mt-2 rounded-xl border border-primary/20 bg-primary/5 p-4 shadow-sm">
+            <h3 className="mb-2 font-semibold text-primary text-sm tracking-wide uppercase">
+              {labels.tips || 'Tips'}
+            </h3>
+            <ul className="flex flex-col gap-1.5 text-sm text-foreground/80">
+              {recipe.tips.map((note, i) => (
+                 <li key={i} className="flex gap-2">
+                   <span className="text-primary mt-0.5">•</span> 
+                   <span>{note}</span>
+                 </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
       <div className="flex flex-col gap-3">
         <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted shadow-sm ring-1 ring-border/60">
           {main ? (

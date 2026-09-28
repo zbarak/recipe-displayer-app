@@ -225,6 +225,7 @@ export function getLabels(rtl: boolean) {
         source: 'מקור המתכון',
         video: 'סרטון',
         step: 'שלב',
+        tips: 'טיפים',
       }
     : {
         ingredients: 'Ingredients',
@@ -239,6 +240,7 @@ export function getLabels(rtl: boolean) {
         source: 'Original recipe',
         video: 'Watch video',
         step: 'Step',
+        tips: 'Tips',
       }
 }
 
