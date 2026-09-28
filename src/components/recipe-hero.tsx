@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { CirclePlay, ExternalLink, ImageOff } from 'lucide-react'
+import { CirclePlay, ExternalLink, ImageOff, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Labels } from '@/lib/recipe-utils'
 import type { Recipe } from '@/lib/recipes'
@@ -132,19 +132,22 @@ export function RecipeHero({
         )}
 
         {recipe.tips && recipe.tips.length > 0 && (
-          <div className="mt-2 rounded-xl border border-primary/20 bg-primary/5 p-4 shadow-sm">
-            <h3 className="mb-2 font-semibold text-primary text-sm tracking-wide uppercase">
+          <details className="group mt-2 rounded-xl border border-primary/20 bg-primary/5 shadow-sm">
+            <summary className="flex cursor-pointer items-center justify-between p-4 font-semibold text-primary text-sm tracking-wide uppercase list-none [&::-webkit-details-marker]:hidden">
               {labels.tips || 'Tips'}
-            </h3>
-            <ul className="flex flex-col gap-1.5 text-sm text-foreground/80">
-              {recipe.tips.map((note, i) => (
-                 <li key={i} className="flex gap-2">
-                   <span className="text-primary mt-0.5">•</span> 
-                   <span>{note}</span>
-                 </li>
-              ))}
-            </ul>
-          </div>
+              <ChevronDown className="size-4 opacity-70 transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="px-4 pb-4">
+              <ul className="flex flex-col gap-1.5 text-sm text-foreground/80">
+                {recipe.tips.map((note, i) => (
+                   <li key={i} className="flex gap-2">
+                     <span className="text-primary mt-0.5">•</span> 
+                     <span>{note}</span>
+                   </li>
+                ))}
+              </ul>
+            </div>
+          </details>
         )}
       </div>
       <div className="flex flex-col gap-3">
