@@ -25,8 +25,8 @@ The application relies on the following environment variables (stored in a local
 
 ## 5. Current State of the Codebase & API Logic
 The core infrastructure is complete and deployed live. Currently, `src/App.jsx` handles two main tasks:
-1. **Sidebar Discovery:** Uses the GitHub Git Tree API (`/git/trees/main?recursive=1`) to fetch a flat list of all `.json` files in the `my-recipe-data` repository and displays them as basic buttons in a right-aligned (RTL) sidebar.
-2. **Recipe Fetching & Rendering:** When a sidebar button is clicked, it uses the GitHub Contents API (`/contents/${path}`) with the `Accept: 'application/vnd.github.v3.raw'` header to fetch the raw JSON. It renders the title, Cloudinary image, mapped ingredients list, mapped instructions list, and trial notes in the main display area.
+1. **Sidebar Discovery / Catalog:** Fetches `_index.json` from the root of `my-recipe-data`, which acts as a lightweight pre-compiled summary of all recipes to quickly build the catalog view without making dozens of API calls.
+2. **Recipe Fetching & Rendering:** When a recipe is clicked, it fetches the specific raw JSON file from GitHub and renders the title, Cloudinary image, tips, mapped ingredients list, mapped instructions list, and trial notes in the main display area.
 
 ## 6. Data Structure (The JSON Schema)
 Every recipe in the database strictly follows this standard schema:
@@ -41,6 +41,7 @@ Every recipe in the database strictly follows this standard schema:
   "original_url": "String (Optional URL to original source)",
   "youtube_url": "String (Optional YouTube video URL)",
   "before_starting": ["Array of prep notes and warnings"],
+  "tips": ["Array of helpful tips and tricks"],
   "ingredients": [
     {
       "section": "String (optional)",
