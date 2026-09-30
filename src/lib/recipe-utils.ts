@@ -14,6 +14,35 @@ export function isRecipeHebrew(recipe: Recipe) {
   )
 }
 
+const UNIT_TRANSLATIONS: Record<string, string> = {
+  'grams': 'גרם',
+  'g': 'גרם',
+  'ml': 'מ"ל',
+  'cups': 'כוסות',
+  'cup': 'כוס',
+  'teaspoons': 'כפיות',
+  'teaspoon': 'כפית',
+  'tablespoons': 'כפות',
+  'tablespoon': 'כף',
+  'pounds': 'פאונד',
+  'pound': 'פאונד',
+  'ounces': 'אונקיות',
+  'ounce': 'אונקיה',
+  'pinch': 'קורט',
+  'pinches': 'קורט',
+  'cloves': 'שיני',
+  'clove': 'שן',
+  'large': 'גדול/ה',
+  'medium': 'בינוני/ת',
+  'small': 'קטן/ה',
+}
+
+export function translateUnit(unit: string, rtl: boolean): string {
+  if (!rtl || !unit) return unit;
+  const lowerUnit = unit.toLowerCase().trim();
+  return UNIT_TRANSLATIONS[lowerUnit] || unit;
+}
+
 const FRACTIONS: [number, string][] = [
   [1 / 8, '⅛'],
   [1 / 4, '¼'],
@@ -137,7 +166,7 @@ export function recipeToHtml(recipe: Recipe, scale: number) {
 
             if (measurements.length === 0) return `<li><strong><bdi>—</bdi></strong> ${escapeHtml(i.name)}</li>`
 
-            const measuresHtml = measurements.map(m => `<bdi>${formatAmount(m.val * scale, m.u || '')}</bdi> ${escapeHtml(m.u || '')}`).join(' / ')
+            const measuresHtml = measurements.map(m => `<bdi>${formatAmount(m.val * scale, m.u || '')}</bdi> ${escapeHtml(translateUnit(m.u || '', rtl))}`).join(' / ')
             return `<li><strong>${measuresHtml}</strong> ${escapeHtml(i.name)}</li>`
           }
         )

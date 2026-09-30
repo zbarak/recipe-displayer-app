@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { formatAmount, type Labels } from '@/lib/recipe-utils'
+import { formatAmount, translateUnit, type Labels } from '@/lib/recipe-utils'
 import type { IngredientGroup } from '@/lib/recipes'
 
 export function IngredientsCard({
@@ -11,11 +11,13 @@ export function IngredientsCard({
   scale,
   labels,
   cookingMode,
+  rtl,
 }: {
   groups: IngredientGroup[]
   scale: number
   labels: Labels
   cookingMode: boolean
+  rtl: boolean
 }) {
   const [checked, setChecked] = useState<Set<string>>(new Set())
   const total = groups.reduce((sum, g) => sum + g.items.length, 0)
@@ -105,12 +107,12 @@ export function IngredientsCard({
                             <>
                               <span>
                                 <bdi>{formatAmount(primary.val * scale, primary.u || '')}</bdi>
-                                {primary.u && <span className="ms-1 font-normal text-muted-foreground">{primary.u}</span>}
+                                {primary.u && <span className="ms-1 font-normal text-muted-foreground">{translateUnit(primary.u, rtl)}</span>}
                               </span>
                               {secondaries.map((sec, idx) => (
                                 <span key={idx} className="mt-0.5 text-[0.85em] font-normal text-muted-foreground">
                                   <bdi>{formatAmount(sec.val * scale, sec.u || '')}</bdi>
-                                  {sec.u && <span className="ms-1">{sec.u}</span>}
+                                  {sec.u && <span className="ms-1">{translateUnit(sec.u, rtl)}</span>}
                                 </span>
                               ))}
                             </>

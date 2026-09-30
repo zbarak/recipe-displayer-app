@@ -66,7 +66,7 @@ Every recipe in the database strictly follows this standard schema:
           "title": "String (optional bold step title)",
           "text": "String representing the step",
           "wait_time_minutes": Number,
-          "image": "String (optional Cloudinary URL)"
+          "image": ["Array of Strings (optional Cloudinary URLs)"]
         }
       ]
     }

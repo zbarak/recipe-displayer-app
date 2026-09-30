@@ -140,14 +140,21 @@ export function InstructionsCard({
                           </span>
                         )}
                         {step.image && (
-                          <img
-                            src={step.image}
-                            alt=""
-                            className={cn(
-                              'aspect-video w-full max-w-sm rounded-xl object-cover ring-1 ring-border transition-opacity',
-                              isDone && 'opacity-50',
-                            )}
-                          />
+                          <div className="flex flex-wrap justify-center gap-3 w-full">
+                            {(Array.isArray(step.image) ? step.image : [step.image])
+                              .filter(Boolean)
+                              .map((imgUrl, idx) => (
+                                <img
+                                  key={idx}
+                                  src={imgUrl}
+                                  alt=""
+                                  className={cn(
+                                    'h-auto w-full max-w-sm rounded-xl ring-1 ring-border transition-opacity',
+                                    isDone && 'opacity-50',
+                                  )}
+                                />
+                              ))}
+                          </div>
                         )}
                       </span>
                     </button>

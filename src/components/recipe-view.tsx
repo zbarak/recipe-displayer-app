@@ -49,6 +49,7 @@ export function RecipeView({
             scale={scale}
             labels={labels}
             cookingMode={cookingMode}
+            rtl={rtl}
           />
         </div>
         <InstructionsCard groups={recipe.instructions} labels={labels} cookingMode={cookingMode} />
